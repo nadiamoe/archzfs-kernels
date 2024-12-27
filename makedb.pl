@@ -69,12 +69,12 @@ close URLS;
 open (SH, '>repo-add.sh');
 printf SH "#!/bin/sh\n";
 foreach my $pkg (sort keys %repofiles) {
-	printf SH "mkdir -- '$pkg' || true\n";
+	printf SH "mkdir -p -- 'out/$pkg' || true\n";
 	for my $file (sort keys %{$repofiles{$pkg}}) {
 		#these have to be put two different files and repo-add will fail if it can't find one
 		#of course '%s'.* will not work either as it can't process/ignore .sig files
-		printf SH "repo-add --nocolor '$pkg/$pkg.db.tar.xz' '%s.xz' || true\n", $file;
-		printf SH "repo-add --nocolor '$pkg/$pkg.db.tar.xz' '%s.zst' || true\n", $file;
+		printf SH "repo-add --nocolor 'out/$pkg/$pkg.db.tar.xz' '%s.xz' || true\n", $file;
+		printf SH "repo-add --nocolor 'out/$pkg/$pkg.db.tar.xz' '%s.zst' || true\n", $file;
 	}
 }
 close SH;

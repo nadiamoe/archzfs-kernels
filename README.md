@@ -12,7 +12,7 @@ Similarly to the pre-fork repo, this container does not actually serve the kerne
 
 ### Hosted instance
 
-I host an instance of this container, updated daily, at `https://archzfs-kernels.nadia.moe`. At the moment this is served from Germany.
+I host an instance of this container, updated daily, at `https://archzfs-kernels.nadia.moe`. At the time of writing this is hosted in Germany, but packages are served from the Arch Linux Archive.
 
 * Add the repositories to your `pacman.conf`
 ```

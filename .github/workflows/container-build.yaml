@@ -38,6 +38,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get Git commit timestamps
+        id: commit-meta
+        run: |-
+          TIMESTAMP=$(git log -1 --pretty=%ct)
+          echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+          echo "date3339=$(date --utc --rfc-3339=seconds -d "@$TIMESTAMP" | sed 's/ /T/')" >> $GITHUB_OUTPUT
+
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
@@ -45,9 +52,10 @@ jobs:
         uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804 # v5.7.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Get Git commit timestamps
-        run: echo "TIMESTAMP=$(git log -1 --pretty=%ct)" >> $GITHUB_ENV
+          labels: |-
+            org.opencontainers.image.created=${{ steps.commit-meta.outputs.date3339 }}
+          annotations: |-
+            manifest:org.opencontainers.image.created=${{ steps.commit-meta.outputs.date3339 }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -61,5 +69,9 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          # Disable attestation so scheduled builds can yield exactly the same image if the source tree and remote files
+          # do not change.
+          provenance: false
+          sbom: false
         env:
-          SOURCE_DATE_EPOCH: ${{ env.TIMESTAMP }}
+          SOURCE_DATE_EPOCH: ${{ steps.commit-meta.outputs.timestamp }}

@@ -4,15 +4,26 @@ This is a fork of https://github.com/endreszabo/kernels.archzfs.com, which reuse
 
 The ZFS packages and its dependencies are fetched in build time to generate the index files, so the container must be rebuilt periodically or when new ZFS packages come out.
 
-The `Dockerfile` is built with caching in mind, and all the costly steps of downloading packages and rebuilding the repos will not be re-run if the upstream `archzfs.db` file has not changed since the last build. Thus, it is fine to build this container periodically, as the CI/CD pipeline in this repo does.
-
 Similarly to the pre-fork repo, this container does not actually serve the kernels, but rather serves redirects to the [Arch Linux Archive](https://wiki.archlinux.org/title/Arch_Linux_Archive). This makes it very cheap to run.
+
+## Build freshness
+
+A CI/CD pipeline rebuilds this image every few hours. As the `Dockerfile` on this repo is built to heavily rely on the container build cache, subsequent builds after the first time will not re-download or re-process any data. The container build process is also made in a fully reproducible way, which means that the digest of `ghcr.io/nadiamoe/archzfs-kernels:main` will also stay the same if nothing had to be rebuilt.
+
+The build cache is automatically invalidated when:
+
+- The archzfs repo index (`http://archzfs.com/archzfs/x86_64/archzfs.db`) changes upstream
+- Arch Linux container image is updated
+- Nginx container image is updated
+- The source tree in this repository changes (i.e. new commits are added)
+
+This means that the `ghcr.io/nadiamoe/archzfs-kernels:main` container image is rebuilt automatically, with a worst-case delay of a couple hours, without abusing anybody's infrastructure. Renovate also keeps the Nginx and Arch Linux containers updated automatically.
 
 ## Using this repository
 
 ### Hosted instance
 
-I host an instance of this container, updated daily, at `https://archzfs-kernels.nadia.moe`. At the time of writing this is hosted in Germany, but packages are served from the Arch Linux Archive.
+I host an instance of this container, with an additional update delay of a couple hours, at `https://archzfs-kernels.nadia.moe`. At the time of writing this is hosted in Germany, but packages are served from the Arch Linux Archive.
 
 * Add the repositories to your `pacman.conf`
 ```

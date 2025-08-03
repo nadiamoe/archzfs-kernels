@@ -12,7 +12,7 @@ A CI/CD pipeline rebuilds this image every few hours. As the `Dockerfile` on thi
 
 The build cache is automatically invalidated when:
 
-- The archzfs repo index (`http://archzfs.com/archzfs/x86_64/archzfs.db`) changes upstream
+- The archzfs repo index (`https://github.com/archzfs/archzfs/releases/download/experimental/archzfs.db`) changes upstream
 - Arch Linux container image is updated
 - Nginx container image is updated
 - The source tree in this repository changes (i.e. new commits are added)

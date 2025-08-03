@@ -6,7 +6,7 @@ WORKDIR /build
 
 # Docker caches this using standard HTTP headers, and thus all layers below.
 # On CI/CD, this cache is reused so it is fine to build this contianer periodically and unconditionally.
-ADD http://archzfs.com/archzfs/x86_64/archzfs.db .
+ADD https://github.com/archzfs/archzfs/releases/download/experimental/archzfs.db .
 
 # Makedb generates a list of urls of the linux- packages that packages in archzfs require, and a script to create repos
 # for them.

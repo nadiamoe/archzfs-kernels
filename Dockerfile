@@ -1,4 +1,4 @@
-FROM archlinux@sha256:b0deabeb3d283da2c7f7dbf0eea051b7b2cd0554e0b737cc457fd21683bdcdd1 as build
+FROM archlinux@sha256:4bf33b21a715aac0b48ce6e9eaed4782a898eae96f88f5da3635572129c2584a as build
 
 RUN pacman -Syu --noconfirm perl wget
 

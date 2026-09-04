@@ -17,7 +17,7 @@ RUN cat urls | xargs -n 1 -P 8 wget -nv || true
 # Generate repos.
 RUN ./repo-add.sh
 
-FROM nginx:1.31.5-alpine@sha256:34f40471dea485273c5e2a04dd5e97a682332ceb4a9adecd67de450dcb2fb390
+FROM nginx:1.31.5-alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
